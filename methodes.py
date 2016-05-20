@@ -6,6 +6,29 @@ def step_euler(y, t, h, f):
     """ Calcule un pas avec la methode d'Euler """
     return y + h * f(y, t)
 
+
+def step_middlepoint(y, t, h, f) :
+    yinter = y + (h / float(2)) * f(y, t)
+    pn = f(yinter, t + (h / float(2)))
+    return y + h * pn
+
+def step_heun(y, t, h, f) :
+    pn1 = f(y, t)
+    y1 = y + h * pn1
+    pn2 = f(y1, t + h)
+    ynplus1 = y + (float(1) / float(2)) * h * (pn1 + pn2)
+    return ynplus1
+
+def step_rk4(y, t, h, f):
+    pn1 = f(y,t)
+    y1 = y + pn1 * h / float(2)
+    pn2 = f(y1, t + h / float(2))
+    y2 = y + pn2 * h / float(2)
+    p3 = f(y2, t + h / float(2))
+    y3 = y + p3 * h 
+    p4 = f(y3, t + h)
+    return y + (pn1 + 2 * pn2 + 2 * p3 + p4) * h / float(6)
+
 def meth_n_step(y0, t0, N, h, f, meth):
     """ Etant donne un point (t0, y0), cette fonction calcule
     un nombre N de pas (uniforfmement repartis) de taille h en utilisant la methode meth pour le pb de Cauchy represultente par y(t0) = y0, y'' = f(y)."""
@@ -26,8 +49,6 @@ def meth_n_step(y0, t0, N, h, f, meth):
   
         t = t + h
         result.append(np.copy(y))
-  #      print(result)
-        
     return result
 
 def infinity_diff_norm(sol1, sol2):
@@ -65,11 +86,19 @@ def test_methods():
     exp_euler = meth_epsilon(np.array([1]), 0, 1, eps, lambda y, t : y, "euler")
     h = float(1)/float((len(exp_euler)-1))
     for i in range(len(exp_euler)-1):
-        print(exp_euler[i][0])
+        #print(exp_euler[i][0])
         assert(abs(exp_euler[i]-np.exp(h*i)) < eps)
     print("Test exponentielle ok.")
 
-    ### Testons pour y(0)=1 et y'(t) = y(t) / 1 - t^2
+    # ### Testons pour y(0)=1 et y'(t) = y(t) / 1 - t^2
     # exp_euler =  meth_epsilon(np.array([1]), 0, 1, eps, lambda y, t : y[0]/float(1-t**2), "euler")
+    # -> boucle infinie
 
+    # ### Testons pour y(0)=(1 0) et y'(t) = (-y2(t) y1(t))
+    exp_euler =  meth_epsilon(np.array([1, 0]), 0, 1, eps, lambda y, t : np.array([-y[1], y[0]]), "rk4")
+    # for i in range(len(exp_euler)-1):
+    #     print(exp_euler[i][0])
+    #     print(exp_euler[i][1])
+    print("Test dim 2 ok.")
+    
 test_methods()
