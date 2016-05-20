@@ -1,0 +1,16 @@
+def ode_rk4_eps(y0,t0,tn,f,eps):
+    Nmax=50
+    curit=0
+    step_s=10
+    (ys,ts)=ode_rk4(y0,t0,f,steps,(tn-t0)/steps)
+    (y2s,t2s)=ode_rk4(y0,t0,steps*2,(tn-t0)/(2*steps))
+    y1s=y2s[:,0:(2*steps+1):2]
+    err=np.max(np.norm(ys-y1s)) #cf doc pr norme coord par coord
+    while ((err>eps) and (curit<Nmax)):
+    	steps=2*steps
+	ys=y2s
+	(y2s,t2s)=ode_rk4(y0,t0,f,steps*2,(tn-t0)/(2*steps))
+	y1s=y2s[:,0:(2*steps+1):2]
+    	err=np.max(np.norm(ys-y1s)) #cf doc pr norme coord par coord
+	curit=curit+1
+    return (y2s,np.arange(t0,tn,(tn-t0)/(2*steps)))
