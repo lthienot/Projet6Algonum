@@ -1,6 +1,6 @@
 import numpy as np
 import math
-import matplotlib.pyplot as pyp
+import matplotlib.pyplot as plt
 
 def step_euler(y, t, h, f):
     """ Calcule un pas avec la methode d'Euler """
@@ -83,11 +83,42 @@ def test_methods():
     eps = 0.01
 
     ### Testons pour le cas simple d'une fonction exp :
-    exp_euler = meth_epsilon(np.array([1]), 0, 1, eps, lambda y, t : y, "euler")
+    exp_euler = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "euler")
     h = float(1)/float((len(exp_euler)-1))
-    for i in range(len(exp_euler)-1):
-        #print(exp_euler[i][0])
-        assert(abs(exp_euler[i]-np.exp(h*i)) < eps)
+    # for i in range(len(exp_euler)-1):
+    #     #print(exp_euler[i][0])
+    #     assert(abs(exp_euler[i]-np.exp(h*i)) < eps)
+
+    exp_heun = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "heun")
+    exp_mdlpt = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "middlepoint")
+    exp_rk4 = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "rk4")
+
+    x_euler=[0]
+    for i in range(1,len(exp_euler)):
+        x_euler += [ x_euler[i-1] + 1/float(len(exp_euler)) ]
+
+    x_heun=[0]
+    for i in range(1,len(exp_heun)):
+        x_heun += [ x_heun[i-1] + 1/float(len(exp_heun)) ]
+
+    x_mdlpt=[0]
+    for i in range(1,len(exp_mdlpt)):
+        x_mdlpt+= [ x_mdlpt[i-1] + 1/float(len(exp_mdlpt)) ]
+
+    x_rk4=[0]
+    for i in range(1,len(exp_rk4)):
+        x_rk4 += [ x_rk4[i-1] + 1/float(len(exp_rk4)) ]
+
+    plt.title("Comparison of different exp. approx")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.plot(x_euler,exp_euler,label='Euler', linewidth=1.0)
+    plt.plot(x_heun ,exp_heun, label='Heun', linewidth=1.0)
+    plt.plot(x_mdlpt ,exp_mdlpt, label='Middlepoint', linewidth=1.0)
+    plt.plot(x_rk4 ,exp_rk4, label='RK4', linewidth=1.0)
+    plt.legend()
+    plt.show()
+
     print("Test exponentielle ok.")
 
     # ### Testons pour y(0)=1 et y'(t) = y(t) / 1 - t^2
