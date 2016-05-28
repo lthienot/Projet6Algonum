@@ -1,5 +1,5 @@
 import numpy as np
-import math
+import math as m
 import matplotlib.pyplot as plt
 
 def step_euler(y, t, h, f):
@@ -80,34 +80,41 @@ def test_methods():
     """test_methods permet de verifier les resultats
     renvoyes par les methodes implementees plus haut
     sur des cas simples."""
-    eps = 0.01
-
+    eps = 0.5
+    tf = 10.
     ### Testons pour le cas simple d'une fonction exp :
-    exp_euler = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "euler")
-    h = float(1)/float((len(exp_euler)-1))
+    exp_euler = meth_epsilon(np.array([1]), 0, tf, eps, lambda y, t : y, "euler")
+    h = float(tf)/float((len(exp_euler)-1))
     # for i in range(len(exp_euler)-1):
     #     #print(exp_euler[i][0])
     #     assert(abs(exp_euler[i]-np.exp(h*i)) < eps)
-
-    exp_heun = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "heun")
-    exp_mdlpt = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "middlepoint")
-    exp_rk4 = meth_epsilon(np.array([1]), 0, 10, eps, lambda y, t : y, "rk4")
+#
+    exp_heun = meth_epsilon(np.array([1]), 0, tf, eps, lambda y, t : y, "heun")
+    exp_mdlpt = meth_epsilon(np.array([1]), 0, tf, eps, lambda y, t : y, "middlepoint")
+    exp_rk4 = meth_epsilon(np.array([1]), 0, tf, eps, lambda y, t : y, "rk4")
 
     x_euler=[0]
     for i in range(1,len(exp_euler)):
-        x_euler += [ x_euler[i-1] + 1/float(len(exp_euler)) ]
+        x_euler += [ x_euler[i-1] + tf/float(len(exp_euler)) ]
 
     x_heun=[0]
     for i in range(1,len(exp_heun)):
-        x_heun += [ x_heun[i-1] + 1/float(len(exp_heun)) ]
+        x_heun += [ x_heun[i-1] + tf/float(len(exp_heun)) ]
 
     x_mdlpt=[0]
     for i in range(1,len(exp_mdlpt)):
-        x_mdlpt+= [ x_mdlpt[i-1] + 1/float(len(exp_mdlpt)) ]
+        x_mdlpt+= [ x_mdlpt[i-1] + tf/float(len(exp_mdlpt)) ]
 
     x_rk4=[0]
     for i in range(1,len(exp_rk4)):
-        x_rk4 += [ x_rk4[i-1] + 1/float(len(exp_rk4)) ]
+        x_rk4 += [ x_rk4[i-1] + tf/float(len(exp_rk4)) ]
+
+    x_exp = [0]
+    exp_math = [1]
+    len_x_exp = len(exp_rk4)
+    for i in range(1, len_x_exp):
+        x_exp += [x_exp[i-1] + tf/float(len_x_exp)]
+        exp_math += [ m.exp( x_exp[i] ) ]
 
     plt.title("Comparison of different exp. approx")
     plt.xlabel("x")
@@ -116,13 +123,15 @@ def test_methods():
     plt.plot(x_heun ,exp_heun, label='Heun', linewidth=1.0)
     plt.plot(x_mdlpt ,exp_mdlpt, label='Middlepoint', linewidth=1.0)
     plt.plot(x_rk4 ,exp_rk4, label='RK4', linewidth=1.0)
+    plt.plot(x_exp ,exp_math, label='Bibliotheque math', linewidth=1.0)
+#    plt.axis([4,tf,40,170])
     plt.legend()
     plt.show()
 
     print("Test exponentielle ok.")
 
-    # ### Testons pour y(0)=1 et y'(t) = y(t) / 1 - t^2
-    # exp_euler =  meth_epsilon(np.array([1]), 0, 1, eps, lambda y, t : y[0]/float(1-t**2), "euler")
+    ### Testons pour y(0)=1 et y'(t) = y(t) / 1 - t^2
+    #exp_euler =  meth_epsilon(np.array([1]), 0, 1, eps, lambda y, t : y[0]/float(1-t**2), "euler")
     # -> boucle infinie
 
     # ### Testons pour y(0)=(1 0) et y'(t) = (-y2(t) y1(t))
@@ -132,4 +141,11 @@ def test_methods():
     #     print(exp_euler[i][1])
     print("Test dim 2 ok.")
     
-test_methods()
+
+
+def main():
+    test_methods()
+
+
+if __name__ ==  '__main__':
+    main()
