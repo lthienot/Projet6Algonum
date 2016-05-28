@@ -123,7 +123,7 @@ def derivee_Nt_Pt(a, b, c, d):
 
 
 def approx_periode(y, t0, tf):
-    "approx_periode calcule la periode de la solution y,\
+    """approx_periode calcule la periode de la solution y,\
     tabulee entre t=t0 et t=tf"""
     
     y_len = len(y)
