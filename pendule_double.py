@@ -42,4 +42,37 @@ def pos_pdouble(t0, y0, f):
     plt.legend(u,"theta1 = Pi/5, theta2 = 2Pi/3")
     plt.show()
 
-#pos_pdouble(t0, [np.pi/3, 0, 2*np.pi/3, 0], eq_pdouble())
+def tmps_retour(x,res):
+    """Retourne le temps du premier retournement a partir d'une courbe donnee"""
+    i = 1
+    while(np.pi-abs(res[i][0])>0. and np.pi-abs(res[i][2])>0. and i < len(res)-1):
+        i = i+1
+    return i
+    
+def afficher_tmps(n):
+    """Graphe du temps mis par le pendule double pour se retourner"""
+    nmax = 100
+    tmax = 10.
+    x = np.arange(0.,tmax+tmax/nmax,tmax/nmax)
+    V = np.zeros([n,n])
+    a = (2*np.pi)/V.shape[0]
+    b = -np.pi
+    for i in range(V.shape[0]):
+        for j in range(V.shape[1]):
+            print ((i*V.shape[1]+j)/(float(V.shape[0]*V.shape[1])))*100.,"%"
+            y0 = np.array([i*a+b, 0, j*a+b, 0.])
+            res = meth_n_step(y0, t0, nmax, 10./nmax, eq_pdouble(), "rk4")
+            tps = tmps_retour(x,res)
+            if(tps == len(x)-1):
+                V[i][j] = x[0]
+            else:
+                V[i][j] = x[tmps_retour(x,res)]
+    plt.clf()
+    plt.imshow(V)
+    plt.gcf()
+    plt.clim()
+    plt.colorbar()
+    plt.show()
+
+pos_pdouble(t0, [np.pi/3, 0, 2*np.pi/3, 0], eq_pdouble())
+#afficher_tmps(100)
