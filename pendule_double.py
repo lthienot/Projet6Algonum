@@ -23,8 +23,9 @@ def eq_pdouble():
 def pos_pdouble(t0, y0, f):
     "Extremite du pendule double en fonction du temps"
     plt.clf()
-    nmax = 1000
     res = meth_epsilon(y0, t0, tf, 10E-2, f,"rk4")
+    res2 = meth_epsilon(y0+np.array([0.1, 0., 0., 0.]), t0, tf, 10E-2, f, "rk4")
+
     y1 = []#theta1
     y2 = []#theta2
     x = []
@@ -39,7 +40,19 @@ def pos_pdouble(t0, y0, f):
         y = y + [-l1*np.cos(y1[i])-l2*np.cos(y2[i])]
     u = plt.plot(x, y, linewidth=1.0)
 
-    plt.legend(u,"theta1 = Pi/5, theta2 = 2Pi/3")
+    y1 = []#theta1
+    y2 = []#theta2
+    x = []
+    y = []
+    for i in range(len(res2)):
+        y1 = y1 + [res2[i][0]]
+        y2 = y2 + [res2[i][2]]
+    for i in range(len(res2)):
+        x = x + [l1*np.sin(y1[i])-l2*np.sin(y2[i])]
+        y = y + [-l1*np.cos(y1[i])-l2*np.cos(y2[i])]
+    v = plt.plot(x, y, linewidth=1.0)
+    
+    plt.legend((u,v),"theta1 = Pi/5, theta2 = 2Pi/3, theta1 = Pi/5+0.1, theta2 = 2Pi/3")
     plt.show()
 
 def tmps_retour(x,res):
@@ -74,5 +87,8 @@ def afficher_tmps(n):
     plt.colorbar()
     plt.show()
 
-pos_pdouble(t0, [np.pi/3, 0, 2*np.pi/3, 0], eq_pdouble())
+
+####### TESTS #####
+
+#pos_pdouble(t0, [np.pi/3, 0, 2*np.pi/3, 0], eq_pdouble())
 #afficher_tmps(100)
