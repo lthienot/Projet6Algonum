@@ -62,5 +62,5 @@ def pos_simple(theta):
 
 ########### TESTS ###########
 
-tracer_freq(np.pi/20, np.pi/4)
-pos_simple(np.pi/10)
+#tracer_freq(np.pi/20, np.pi/4)
+#pos_simple(np.pi/10)
