@@ -5,7 +5,7 @@ from methodes import *
 
 g = 9.81
 t0 = 0.
-tf = 10
+tf = 10.
 eps = 10E-1
 l = 1
 
@@ -49,8 +49,8 @@ def pos_simple(theta):
     nmax = 300
     y1 = []
     y2 = []
-    x = np.arange(0.,10,eps)
-    res = meth_eps(y0, t0, tf, eps, eq_psimple, "rk4")
+    res = meth_epsilon(y0, t0, tf, 10E-3, eq_psimple(), "rk4")
+    x = np.arange(t0, tf, (tf - t0)/len(res))
     for i in range(len(res)):
         y1 = y1 + [res[i][0]]
         y2 = y2 + [res[i][1]]
@@ -60,6 +60,6 @@ def pos_simple(theta):
     plt.show()
 
 
-#freq_psimple(np.pi/100)
-#tracer_freq(np.pi/20, np.pi/4)
-#pos_simple(np.pi/10)
+freq_psimple(np.pi/100)
+tracer_freq(np.pi/20, np.pi/4)
+pos_simple(np.pi/10)
