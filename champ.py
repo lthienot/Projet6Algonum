@@ -3,8 +3,10 @@ import numpy as np
 
 def show_vector_field(f, x0, y0, xmax, ymax, dx, dy):
     """ Dessine le champ des tangentes de l'equation differentielle 
-    donnee par le probleme de Cauchy (y0, f). 
-    Uniquement pour les fonctions de dimension 2"""
+    donnee par le probleme de Cauchy ((x0,y0), f). 
+    Uniquement pour les fonctions de dimension 2.
+    Le decoupage se fait entre les points (x0,y0) et (xmax, ymax),
+    avec des segments de longueur resp. dx et dy."""
 
     #Initialisation
     X = np.zeros([len(np.arange(x0, xmax, dx)), 
@@ -13,20 +15,12 @@ def show_vector_field(f, x0, y0, xmax, ymax, dx, dy):
     U = np.copy(X)
     V = np.copy(Y)
 
-    n = X.shape[0] #lignes
-    m = X.shape[1] #colonnes
-    
-    #Remplissage de X et Y
-    X[0,:] = x0
-    Y[:,0] = y0
-    for i in range(1,n):
-        X[i,:] = x0 + i*dx
-    for j in range(1,m):
-        Y[:,j] = y0 + j*dy
-        
-    #Remplissage de U et V
-    for i in range(n):
-        for j in range(m):
+    #Remplissage de X, Y, U et V
+    for i in range(X.shape[0]): #lignes
+        for j in range(X.shape[1]): #colonnes
+            X[i,j] = x0 + i*dx
+            Y[i,j] = y0 + j*dy
+            
             derivee = f([X[i,j],Y[i,j]], 0)
             U[i,j] = derivee[0]
             V[i,j] = derivee[1]
